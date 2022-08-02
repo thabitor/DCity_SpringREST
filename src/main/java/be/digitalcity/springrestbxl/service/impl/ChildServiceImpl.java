@@ -26,6 +26,20 @@ public class ChildServiceImpl implements ChildService {
     }
 
     @Override
+    public Child update(Long id, Child childToUpdate) {
+        if(childToUpdate == null || id == null)
+            throw new IllegalArgumentException("params cannot be null");
+
+        if( !repository.existsById(id) )
+            throw new EntityNotFoundException();
+
+        childToUpdate.setId(id);
+
+        // TODO gérer les tuteurs
+
+        return repository.save(childToUpdate);    }
+
+    @Override
     public Child getOne(Long id) {
         return repository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
