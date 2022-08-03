@@ -4,10 +4,17 @@ import be.digitalcity.springrestbxl.model.dto.ChildDTO;
 import be.digitalcity.springrestbxl.model.entities.Child;
 import be.digitalcity.springrestbxl.model.forms.ChildInsertForm;
 import be.digitalcity.springrestbxl.model.forms.ChildUpdateForm;
+import be.digitalcity.springrestbxl.service.TutorService;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ChildMapper {
+
+    private final TutorService tutorService;
+
+    public ChildMapper(TutorService tutorService) {
+        this.tutorService = tutorService;
+    }
 
     public ChildDTO toChildDto (Child entity) {
         return ChildDTO.builder()
@@ -30,6 +37,7 @@ public class ChildMapper {
         child.setLastName( form.getLastName() );
         child.setBirthDate( form.getBirthDate() );
         child.setPropre( form.isPropre() );
+        child.setTutors( tutorService.getAllById(form.getTutorsIds()) );
 
         return child;
 
@@ -45,6 +53,7 @@ public class ChildMapper {
         entity.setBirthDate(form.getBirthDate());
         entity.setPropre(form.isPropre());
         entity.setAllergies(form.getAllergies());
+        entity.setTutors( tutorService.getAllById(form.getTutorsIds()) );
 
         return entity;
 

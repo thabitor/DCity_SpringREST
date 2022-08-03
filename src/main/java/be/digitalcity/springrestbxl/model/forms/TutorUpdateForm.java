@@ -1,22 +1,19 @@
-package be.digitalcity.springrestbxl.model.dto;
+package be.digitalcity.springrestbxl.model.forms;
 
 import be.digitalcity.springrestbxl.model.entities.Child;
-import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDate;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.Set;
 
 @Data
-@Builder
-public class TutorDTO {
+public class TutorUpdateForm {
 
-    private long id;
+    @NotBlank
     private String lastName;
     private String firstName;
-    private String numTel;
     private String address;
-    private List<ChildDTO> children;
-
+    private String numTel;
+    private List<Long> childrenIds;
 }

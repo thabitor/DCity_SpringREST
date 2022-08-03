@@ -6,6 +6,7 @@ import be.digitalcity.springrestbxl.model.entities.Child;
 import be.digitalcity.springrestbxl.model.forms.ChildInsertForm;
 import be.digitalcity.springrestbxl.model.forms.ChildUpdateForm;
 import be.digitalcity.springrestbxl.service.ChildService;
+import be.digitalcity.springrestbxl.service.TutorService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,9 +18,12 @@ public class ChildController {
     private final ChildService service;
     private final ChildMapper mapper;
 
-    public ChildController(ChildService service, ChildMapper mapper) {
+    private final TutorService tutorService;
+
+    public ChildController(ChildService service, ChildMapper mapper, TutorService tutorService) {
         this.service = service;
         this.mapper = mapper;
+        this.tutorService = tutorService;
     }
 
     @GetMapping("/child/{id:[0-9]+}")
@@ -36,24 +40,24 @@ public class ChildController {
     }
 
     @PostMapping ("/child/new")
-    public ChildDTO insert(@RequestBody Child child) {
+    public ChildDTO newChild(@RequestBody Child child) {
 
         return mapper.toChildDto(service.save(child));
     }
 
-    @PostMapping
+    @PostMapping("/child/insert")
     public ChildDTO insert(@RequestBody ChildInsertForm form){
         Child entity = mapper.toEntity(form);
         entity = service.save( entity );
         return mapper.toChildDto( entity );
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/child/delete/{id}")
     public ChildDTO delete(@PathVariable long id){
         return mapper.toChildDto( service.delete(id) );
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/child/update/{id}")
     public ChildDTO update(@PathVariable long id, @RequestBody ChildUpdateForm form ){
 
         Child entity = mapper.toEntity(form);

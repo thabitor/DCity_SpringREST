@@ -56,4 +56,9 @@ public class ChildServiceImpl implements ChildService {
         repository.delete(child);
         return child;
     }
+
+    @Override
+    public List<Child> getAllById(List<Long> childrenId) {
+        return repository.findAllById(childrenId);
+    }
 }

@@ -8,6 +8,7 @@ import lombok.Setter;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -24,6 +25,6 @@ public class Tutor extends Person {
     private String address;
 
     @ManyToMany(mappedBy = "tutors")
-    private Set<Child> children;
+    private List<Child> children;
 
 }

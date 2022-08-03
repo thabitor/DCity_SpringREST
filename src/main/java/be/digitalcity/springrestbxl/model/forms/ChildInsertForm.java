@@ -6,6 +6,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.List;
+
 @Data
 public class ChildInsertForm {
         @NotBlank
@@ -15,4 +17,5 @@ public class ChildInsertForm {
         @PastOrPresent
         private LocalDate birthDate;
         private boolean propre;
+        private List<Long> tutorsIds;
 }

@@ -12,5 +12,5 @@ public class ChildUpdateForm {
         private LocalDate birthDate;
         private boolean propre;
         private List<String> allergies;
-        private Set<Long> TutorsId;
+        private List<Long> tutorsIds;
 }

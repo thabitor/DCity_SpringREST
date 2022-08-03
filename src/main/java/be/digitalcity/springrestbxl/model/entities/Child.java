@@ -20,11 +20,11 @@ public class Child extends Person {
 
     @ManyToMany
     @JoinTable(
-            name = "tutorat",
+            name = "ChildAndTutor",
             joinColumns = @JoinColumn(name = "child_id"),
             inverseJoinColumns = @JoinColumn(name = "tutor_id")
     )
-    private Set<Tutor> tutors;
+    private List<Tutor> tutors;
 
     public Child(String firstName, String lastName, LocalDate birthDate, boolean propre) {
         super(firstName, lastName);

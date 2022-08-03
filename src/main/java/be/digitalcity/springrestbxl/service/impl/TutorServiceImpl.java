@@ -57,4 +57,9 @@ public class TutorServiceImpl implements TutorService {
         repository.delete(tutor);
         return tutor;
     }
+
+    @Override
+    public List<Tutor> getAllById(List<Long> tutorIds) {
+        return repository.findAllById(tutorIds);
+    }
 }

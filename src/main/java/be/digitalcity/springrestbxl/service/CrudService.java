@@ -16,4 +16,6 @@ public interface CrudService <T, TID>{
 
     // DELETE
     T delete(TID id);
+
+    List<T> getAllById(List<TID> ids);
 }
