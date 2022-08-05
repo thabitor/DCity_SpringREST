@@ -18,4 +18,5 @@ public class ChildInsertForm {
         private LocalDate birthDate;
         private boolean propre;
         private List<Long> tutorsIds;
+        private List<String> allergies;
 }

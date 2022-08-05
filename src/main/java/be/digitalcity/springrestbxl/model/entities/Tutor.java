@@ -25,6 +25,6 @@ public class Tutor extends Person {
     private String address;
 
     @ManyToMany(mappedBy = "tutors")
-    private List<Child> children;
+    private Set<Child> children;
 
 }

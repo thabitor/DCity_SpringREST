@@ -7,17 +7,19 @@ import be.digitalcity.springrestbxl.model.forms.ChildInsertForm;
 import be.digitalcity.springrestbxl.model.forms.ChildUpdateForm;
 import be.digitalcity.springrestbxl.service.ChildService;
 import be.digitalcity.springrestbxl.service.TutorService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping("/child")
 public class ChildController {
 
     private final ChildService service;
     private final ChildMapper mapper;
-
     private final TutorService tutorService;
 
     public ChildController(ChildService service, ChildMapper mapper, TutorService tutorService) {
@@ -26,43 +28,35 @@ public class ChildController {
         this.tutorService = tutorService;
     }
 
-    @GetMapping("/child/{id:[0-9]+}")
-    public ChildDTO getOne(@PathVariable long id){
-        return mapper
-                .toChildDto(service.getOne(id));
-    }
-
-    @GetMapping ("/child/all")
-    public List<ChildDTO> getAll() {
-        return service.getAll().stream()
-                .map(mapper::toChildDto)
-                .collect(Collectors.toList());
-    }
-
-    @PostMapping ("/child/new")
-    public ChildDTO newChild(@RequestBody Child child) {
-
-        return mapper.toChildDto(service.save(child));
-    }
-
-    @PostMapping("/child/insert")
+    @PostMapping("/insert")
     public ChildDTO insert(@RequestBody ChildInsertForm form){
-        Child entity = mapper.toEntity(form);
-        entity = service.save( entity );
-        return mapper.toChildDto( entity );
+        return service.create(form);
     }
 
-    @DeleteMapping("/child/delete/{id}")
+    @GetMapping("/{id:[0-9]+}")
+    public ChildDTO getOne(@PathVariable long id){
+        return service.getOne(id);
+    }
+
+    @GetMapping ({"", "/all"})
+    public List<ChildDTO> getAll() {
+        return service.getAll();
+    }
+
+    @DeleteMapping("/delete/{id}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public ChildDTO delete(@PathVariable long id){
-        return mapper.toChildDto( service.delete(id) );
+       return service.delete(id);
     }
 
-    @PutMapping("/child/update/{id}")
+    @PutMapping("/update/{id}")
     public ChildDTO update(@PathVariable long id, @RequestBody ChildUpdateForm form ){
+        return service.update(id, form);
+    }
 
-        Child entity = mapper.toEntity(form);
-        return mapper.toChildDto( service.update( id, entity ) );
-
+    @PatchMapping("/{id:[0-9]+}")
+    public ChildDTO patchTutors(@PathVariable long id, @RequestBody Collection<Long> tutorIds){
+        return service.changeTutors(id, tutorIds);
     }
 
 

@@ -2,9 +2,7 @@ package be.digitalcity.springrestbxl.mapper;
 
 import be.digitalcity.springrestbxl.model.dto.TutorDTO;
 import be.digitalcity.springrestbxl.model.entities.Tutor;
-import be.digitalcity.springrestbxl.model.forms.TutorInsertForm;
-import be.digitalcity.springrestbxl.model.forms.TutorUpdateForm;
-import be.digitalcity.springrestbxl.service.ChildService;
+import be.digitalcity.springrestbxl.model.forms.TutorForm;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -26,7 +24,7 @@ public class TutorMapper {
                 .build();
     }
 
-    public Tutor toEntity(TutorInsertForm form){
+    public Tutor toEntity(TutorForm form){
 
         if( form == null )
             return null;

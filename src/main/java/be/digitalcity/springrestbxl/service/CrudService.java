@@ -2,13 +2,13 @@ package be.digitalcity.springrestbxl.service;
 
 import java.util.List;
 
-public interface CrudService <T, TID>{
+public interface CrudService <T, TID, TIFORM, TUFORM>{
     // CREATE
-    T save(T t);
+    T create(TIFORM toInsert);
 
     // UPDATE
 
-    T update(TID id, T t);
+    T update(TID id, TUFORM toUpdate);
 
     // READ
     T getOne(TID id);
@@ -17,5 +17,4 @@ public interface CrudService <T, TID>{
     // DELETE
     T delete(TID id);
 
-    List<T> getAllById(List<TID> ids);
 }

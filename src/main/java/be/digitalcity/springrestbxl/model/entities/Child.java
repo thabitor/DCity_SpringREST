@@ -24,7 +24,7 @@ public class Child extends Person {
             joinColumns = @JoinColumn(name = "child_id"),
             inverseJoinColumns = @JoinColumn(name = "tutor_id")
     )
-    private List<Tutor> tutors;
+    private Set<Tutor> tutors;
 
     public Child(String firstName, String lastName, LocalDate birthDate, boolean propre) {
         super(firstName, lastName);
