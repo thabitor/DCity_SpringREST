@@ -10,6 +10,7 @@ import be.digitalcity.springrestbxl.service.TutorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,7 +30,7 @@ public class ChildController {
     }
 
     @PostMapping("/insert")
-    public ChildDTO insert(@RequestBody ChildInsertForm form){
+    public ChildDTO insert(@Valid @RequestBody ChildInsertForm form){
         return service.create(form);
     }
 
@@ -43,20 +44,25 @@ public class ChildController {
         return service.getAll();
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ChildDTO delete(@PathVariable long id){
        return service.delete(id);
     }
 
-    @PutMapping("/update/{id}")
-    public ChildDTO update(@PathVariable long id, @RequestBody ChildUpdateForm form ){
+    @PutMapping("/{id}")
+    public ChildDTO update(@PathVariable long id, @Valid @RequestBody ChildUpdateForm form ){
         return service.update(id, form);
     }
 
     @PatchMapping("/{id:[0-9]+}")
-    public ChildDTO patchTutors(@PathVariable long id, @RequestBody Collection<Long> tutorIds){
+    public ChildDTO patchTutors(@PathVariable long id, @Valid @RequestBody Collection<Long> tutorIds){
         return service.changeTutors(id, tutorIds);
+    }
+
+    @GetMapping(value = "/allergy")
+    public List<ChildDTO> getAllWithAllergie(@RequestParam String allergy){
+        return service.getAllWithAllergy(allergy);
     }
 
 

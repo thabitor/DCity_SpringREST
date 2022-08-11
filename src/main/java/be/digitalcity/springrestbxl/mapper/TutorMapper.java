@@ -1,26 +1,35 @@
 package be.digitalcity.springrestbxl.mapper;
 
+import be.digitalcity.springrestbxl.model.dto.AddressDTO;
 import be.digitalcity.springrestbxl.model.dto.TutorDTO;
 import be.digitalcity.springrestbxl.model.entities.Tutor;
 import be.digitalcity.springrestbxl.model.forms.TutorForm;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Component
 public class TutorMapper {
 
-//    private final ChildService childService;
-//    public TutorMapper(ChildService childService) {
-//        this.childService = childService;
-//    }
-
     public TutorDTO toTutorDto (Tutor entity) {
+        if(entity == null)
+            return null;
+
+        Set<TutorDTO.ChildDTO> children = new HashSet<>();
+
+        if( entity.getChildren() != null )
+            entity.getChildren().stream()
+                    .map( TutorDTO.ChildDTO::fromEntity )
+                    .forEach(children::add);
+
         return TutorDTO.builder()
                 .id(entity.getId())
                 .firstName(entity.getFirstName())
                 .lastName(entity.getLastName())
                 .numTel(entity.getNumTel())
-                .address(entity.getAddress())
-//                .children(entity.getChildren())
+                .address( AddressDTO.fromEntity(entity.getAddress()) )
+                .children( children.stream().toList() )
                 .build();
     }
 
@@ -33,24 +42,11 @@ public class TutorMapper {
 
         tutor.setFirstName( form.getFirstName() );
         tutor.setLastName( form.getLastName() );
-        tutor.setAddress( form.getAddress() );
+        tutor.setAddress( form.getAddress().toEntity() );
         tutor.setNumTel( form.getNumTel() );
 
         return tutor;
 
     }
 
-    public Tutor toEntity(TutorUpdateForm form){
-
-        Tutor entity = new Tutor();
-
-        entity.setFirstName(form.getFirstName());
-        entity.setLastName(form.getLastName());
-        entity.setAddress( form.getAddress() );
-        entity.setNumTel( form.getNumTel() );
-//        entity.setChildren( childService.getAllById(form.getChildrenIds()) );
-
-        return entity;
-
-    }
 }

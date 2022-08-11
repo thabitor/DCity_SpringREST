@@ -6,6 +6,7 @@ import be.digitalcity.springrestbxl.model.forms.TutorForm;
 import be.digitalcity.springrestbxl.service.TutorService;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -44,9 +45,13 @@ public class TutorController {
     }
 
     @PutMapping("/{id}")
-    public TutorDTO update(@PathVariable long id, @RequestBody TutorForm form ){
-
+    public TutorDTO update(@PathVariable long id, @Valid @RequestBody TutorForm form ){
         return service.update(id, form);
 
+    }
+
+    @GetMapping(params = "city")
+    public List<TutorDTO> getAllFromVille(@RequestParam String ville){
+        return service.getAllFromCityWithChild(ville);
     }
 }
