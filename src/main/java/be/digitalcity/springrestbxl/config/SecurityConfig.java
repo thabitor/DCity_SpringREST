@@ -3,6 +3,9 @@ package be.digitalcity.springrestbxl.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -10,6 +13,11 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(
+        prePostEnabled = true, // acces à @PreAuthorize et @PostAuthorize
+        securedEnabled = true, // acces à @Secured
+        jsr250Enabled = true // acces à @RolesAllowed
+)
 public class SecurityConfig {
 
     // LES DROITS:
@@ -65,10 +73,18 @@ public class SecurityConfig {
                 // - * : joker pour un segment de 0 à N caractères
                 // - **: joker pour de 0 à N segments
                 // - {pathVar:regex}: pattern regex pour un segment
-                .anyRequest().permitAll();
+                .anyRequest().permitAll()
+                .antMatchers(HttpMethod.DELETE).hasRole("ADMIN")
+                .antMatchers("/user/**").permitAll()
+                .anyRequest().authenticated();
 
         return http.build();
 
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
     }
 
 }
