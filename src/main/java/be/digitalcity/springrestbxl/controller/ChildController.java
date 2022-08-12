@@ -2,31 +2,32 @@ package be.digitalcity.springrestbxl.controller;
 
 import be.digitalcity.springrestbxl.mapper.ChildMapper;
 import be.digitalcity.springrestbxl.model.dto.ChildDTO;
-import be.digitalcity.springrestbxl.model.entities.Child;
+import be.digitalcity.springrestbxl.model.dto.ReservationDTO;
 import be.digitalcity.springrestbxl.model.forms.ChildInsertForm;
 import be.digitalcity.springrestbxl.model.forms.ChildUpdateForm;
 import be.digitalcity.springrestbxl.service.ChildService;
+import be.digitalcity.springrestbxl.service.ReservationService;
 import be.digitalcity.springrestbxl.service.TutorService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/child")
 public class ChildController {
 
     private final ChildService service;
-    private final ChildMapper mapper;
-    private final TutorService tutorService;
+    private final ReservationService reservationService;
 
-    public ChildController(ChildService service, ChildMapper mapper, TutorService tutorService) {
+
+    public ChildController(ChildService service, ReservationService reservationService) {
         this.service = service;
-        this.mapper = mapper;
-        this.tutorService = tutorService;
+        this.reservationService = reservationService;
     }
 
     @PostMapping("/insert")
@@ -63,6 +64,16 @@ public class ChildController {
     @GetMapping(value = "/allergy")
     public List<ChildDTO> getAllWithAllergie(@RequestParam String allergy){
         return service.getAllWithAllergy(allergy);
+    }
+    // GET http://localhost:8080/enfant/{id}/reservation/future
+    @GetMapping("/{id:[0-9]+}/reservation/future")
+    public List<ReservationDTO> futureReservation(@PathVariable Long id){
+        return reservationService.futureReservOfChild(id);
+    }
+
+    @GetMapping(value = "/on-day", params = "date")// 30-12-2020 : pattern= "dd-MM-yyyy"
+    public List<ChildDTO> presentOnDay(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDate date){
+        return service.getAllPresentOnDay(date);
     }
 
 

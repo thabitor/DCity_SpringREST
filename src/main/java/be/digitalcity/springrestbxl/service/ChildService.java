@@ -5,6 +5,7 @@ import be.digitalcity.springrestbxl.model.entities.Child;
 import be.digitalcity.springrestbxl.model.forms.ChildInsertForm;
 import be.digitalcity.springrestbxl.model.forms.ChildUpdateForm;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
@@ -14,4 +15,5 @@ public interface ChildService extends CrudService<ChildDTO, Long, ChildInsertFor
 
     List<ChildDTO> getAllWithAllergy(String allergy);
 
+    List<ChildDTO> getAllPresentOnDay(LocalDate date);
 }
