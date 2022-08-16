@@ -9,6 +9,8 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -58,28 +60,30 @@ public class SecurityConfig {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.authorizeRequests()
-                .antMatchers("/security/test/????").authenticated()
+                .antMatchers("/swagger-ui/**").permitAll()
+                .antMatchers("/h2-console/**").permitAll()
+                .antMatchers("/security/test/all").permitAll()
                 .antMatchers("/security/test/nobody").denyAll()
-                .antMatchers("/security/test/connected").authenticated()
-                .antMatchers("/security/test/not-connected").anonymous()
-                .antMatchers("/security/test/role/user").hasRole("USER")
-                .antMatchers("/security/test/role/admin").hasRole("ADMIN")
-                .antMatchers("/security/test/role/any").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/security/test/authority/READ").hasAuthority("ROLE_USER")
-                .antMatchers("/security/test/authority/any").not().hasAnyAuthority("ROLE_USER", "WRITE")
-                .antMatchers("/fake/request/{id::[0-9]+}/**").denyAll()
+                .antMatchers("/reserv/check").permitAll()
+                .antMatchers(HttpMethod.DELETE).hasRole("ADMIN")
+                .antMatchers("/user/**").permitAll()
+                .anyRequest().permitAll()
+                .and().headers().frameOptions().disable();
+
                 // je peux utiliser:
                 // - ? : joker pour de 0 à 1 caractère
                 // - * : joker pour un segment de 0 à N caractères
                 // - **: joker pour de 0 à N segments
                 // - {pathVar:regex}: pattern regex pour un segment
-                .anyRequest().permitAll()
-                .antMatchers(HttpMethod.DELETE).hasRole("ADMIN")
-                .antMatchers("/user/**").permitAll()
-                .anyRequest().authenticated();
+
 
         return http.build();
 
+    }
+
+    @Bean
+    public PasswordEncoder encoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
