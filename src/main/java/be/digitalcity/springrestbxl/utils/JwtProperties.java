@@ -3,20 +3,17 @@ package be.digitalcity.springrestbxl.utils;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
-
 
 @Component
 @Getter @Setter
 @ConfigurationProperties("application.jwt")
 public class JwtProperties implements InitializingBean {
-
     //    @Value("${application.jwt.secret}")
     private String secret;
     //    @Value("${application.jwt.expiresAt}")
-    private long expiresAt;
+    private Long expiresAt;
     //    @Value("${application.jwt.headerPrefix}")
     private String headerPrefix;
     //    @Value("${application.jwt.headerKey}")
@@ -36,6 +33,5 @@ public class JwtProperties implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        System.out.println(this);
     }
 }

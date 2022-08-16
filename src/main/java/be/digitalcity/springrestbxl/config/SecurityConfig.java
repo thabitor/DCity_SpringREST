@@ -1,5 +1,6 @@
 package be.digitalcity.springrestbxl.config;
 
+import be.digitalcity.springrestbxl.filters.JwtAuthFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -12,6 +13,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -53,32 +55,29 @@ public class SecurityConfig {
 
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
-        http.httpBasic();
-
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthFilter authFilter) throws Exception {
+        // http.httpBasic(); // we replace BasicAuth for Auth0
+        http.csrf().disable(); // we disable this to avoid csrf errors
+        http.addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
+        http.sessionManagement().sessionCreationPolicy((SessionCreationPolicy.STATELESS));
         http.authorizeRequests()
                 .antMatchers("/swagger-ui/**").permitAll()
                 .antMatchers("/v3/**").permitAll()
-                .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/security/test/all").permitAll()
                 .antMatchers("/security/test/nobody").denyAll()
-                .antMatchers("/reserv/check").permitAll()
-                .antMatchers(HttpMethod.DELETE).hasRole("ADMIN")
+                .antMatchers("/security/test/connected").authenticated()
+                .antMatchers("/security/test/not-connected").anonymous()
+                .antMatchers("/security/test/role/user").hasRole("USER")
+                .antMatchers("/security/test/role/admin").hasRole("ADMIN")
+                .antMatchers("/security/test/role/any").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/security/test/authority/read").hasAuthority("ROLE_USER")
+                .antMatchers("/security/test/authority/any").hasAnyAuthority("ROLE_USER", "READ", "WRITE")
+                .antMatchers("/reservations/check-date").permitAll()
+                .antMatchers(HttpMethod.DELETE, "/**").hasRole("ADMIN")
                 .antMatchers("/user/**").permitAll()
-                .anyRequest().permitAll();
-
-                // je peux utiliser:
-                // - ? : joker pour de 0 à 1 caractère
-                // - * : joker pour un segment de 0 à N caractères
-                // - **: joker pour de 0 à N segments
-                // - {pathVar:regex}: pattern regex pour un segment
-
+                .anyRequest().authenticated();
 
         return http.build();
-
     }
 
     @Bean
