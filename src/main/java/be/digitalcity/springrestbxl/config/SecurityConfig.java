@@ -61,14 +61,14 @@ public class SecurityConfig {
 
         http.authorizeRequests()
                 .antMatchers("/swagger-ui/**").permitAll()
+                .antMatchers("/v3/**").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/security/test/all").permitAll()
                 .antMatchers("/security/test/nobody").denyAll()
                 .antMatchers("/reserv/check").permitAll()
                 .antMatchers(HttpMethod.DELETE).hasRole("ADMIN")
                 .antMatchers("/user/**").permitAll()
-                .anyRequest().permitAll()
-                .and().headers().frameOptions().disable();
+                .anyRequest().permitAll();
 
                 // je peux utiliser:
                 // - ? : joker pour de 0 à 1 caractère
