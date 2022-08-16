@@ -1,7 +1,6 @@
 package be.digitalcity.springrestbxl.filters;
 
 import be.digitalcity.springrestbxl.utils.JwtProvider;
-import org.springframework.lang.NonNull;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -15,7 +14,6 @@ import java.io.IOException;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
-
     private final JwtProvider jwtProvider;
 
     public JwtAuthFilter(JwtProvider jwtProvider) {
@@ -23,24 +21,16 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
-
-        // Sortir le token de la requete (header Authorization)
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        // get token from the request (header Authorization)
         String token = jwtProvider.extractToken(request);
-
-        // Verifier la validité du token (algo, secret, claims particuliers)
-        if( token != null && jwtProvider.validate(token) ) {
-
-            // Créer l'Authentication
+        // verify the validity of the token (algo, secret, claims)
+        if (token != null && jwtProvider.validate(token)){
+            // create Authentication
             Authentication auth = jwtProvider.generateAuth(token);
-
-            // Mettre l'Authentication dans le contexte de securité
-            SecurityContextHolder.getContext().setAuthentication( auth );
-
+            // put Authentication in the Security Context
+            SecurityContextHolder.getContext().setAuthentication(auth);
         }
-
-
         filterChain.doFilter(request, response);
-
     }
 }
